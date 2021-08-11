@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 
 import "./ExpenseForm.css";
 
@@ -37,6 +37,7 @@ const ExpenseForm = (props) => {
     event.preventDefault();
 
     const expenseData = {
+      id: Math.floor(Math.random() * 1000 + 1),
       title: enteredTitle,
       amount: enteredAmount,
       date: new Date(enteredDate),
