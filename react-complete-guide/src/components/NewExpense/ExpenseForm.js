@@ -39,7 +39,7 @@ const ExpenseForm = (props) => {
     const expenseData = {
       id: Math.floor(Math.random() * 1000 + 1),
       title: enteredTitle,
-      amount: enteredAmount,
+      amount: +enteredAmount,
       date: new Date(enteredDate),
     };
 
@@ -81,6 +81,9 @@ const ExpenseForm = (props) => {
             onChange={dateChangeHandler}
           ></input>
         </div>
+        <button type="button" onClick={props.onCancel}>
+          Cancel
+        </button>
         <button type="submit">Add Expense</button>
       </div>
     </form>
