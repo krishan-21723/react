@@ -22,6 +22,7 @@ const Input = React.forwardRef((props, ref) => {
     >
       <label htmlFor={props.id}>{props.label}</label>
       <input
+        ref={inputRef}
         type={props.type}
         id={props.id}
         value={props.value}

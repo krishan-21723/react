@@ -92,7 +92,6 @@ const Login = (props) => {
 
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
-
   const submitHandler = (event) => {
     event.preventDefault();
     if (formIsValid) {
