@@ -27,6 +27,7 @@ const Products = (props) => {
             title={product.title}
             price={product.price}
             description={product.description}
+            totalPrice={product.price}
           />
         ))}
       </ul>
