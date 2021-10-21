@@ -1,14 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { uiActions } from "./ui-slice";
 
 const cartSlice = createSlice({
   name: "cart",
-  initialState: { items: [], totalQuantity: 0 },
+  initialState: { items: [], totalQuantity: 0, changed: false },
   reducers: {
+    replaceCart(state, action) {
+      state.totalQuantity = action.payload.totalQuantity;
+      state.items = action.payload.items;
+    },
     addItemToCart(state, action) {
       const newItem = action.payload;
       const existingItem = state.items.find((item) => item.id === newItem.id);
       state.totalQuantity = state.totalQuantity + 1;
+      state.changed = true;
       if (!existingItem) {
         state.items.push({
           id: newItem.id,
@@ -26,6 +30,7 @@ const cartSlice = createSlice({
       const id = action.payload;
       const existingItem = state.items.find((item) => item.id === id);
       state.totalQuantity = state.totalQuantity - 1;
+      state.changed = true;
       if (existingItem.quantity === 1) {
         state.items = state.items.filter((item) => item.id !== id);
       } else {
@@ -35,49 +40,6 @@ const cartSlice = createSlice({
     },
   },
 });
-
-export const sendCartData = (cart) => {
-  return async (dispatch) => {
-    dispatch(
-      uiActions.showNotification({
-        status: "pending",
-        title: "Sending...",
-        message: "Sending Cart Data!",
-      })
-    );
-
-    const sendRequest = async () => {
-      const response = await fetch(
-        "https://react-http-68f6c-default-rtdb.firebaseio.com/cart.json",
-        {
-          method: "PUT",
-          body: JSON.stringify(cart),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Sending Cart Data Failed");
-      }
-    };
-    try {
-      await sendRequest();
-      dispatch(
-        uiActions.showNotification({
-          status: "success",
-          title: "Success!...",
-          message: "Sent Cart Data Successfully!",
-        })
-      );
-    } catch (error) {
-      dispatch(
-        uiActions.showNotification({
-          status: "error",
-          title: "Error!",
-          message: "Sent Cart Data Failed!",
-        })
-      );
-    }
-  };
-};
 
 export const cartActions = cartSlice.actions;
 export default cartSlice;
