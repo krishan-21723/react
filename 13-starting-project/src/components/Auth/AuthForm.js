@@ -1,9 +1,11 @@
 import { useState, useRef, useContext } from "react";
-import AuthContext from "../../store/auth-context";
+import { useHistory } from "react-router-dom";
 
+import AuthContext from "../../store/auth-context";
 import classes from "./AuthForm.module.css";
 
 const AuthForm = () => {
+  const history = useHistory();
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
 
@@ -22,7 +24,7 @@ const AuthForm = () => {
     const enteredEmail = emailInputRef.current.value;
     const enteredPassword = passwordInputRef.current.value;
 
-    //optional: validation
+    // optional: Add validation
 
     setIsLoading(true);
     let url;
@@ -50,16 +52,21 @@ const AuthForm = () => {
           return res.json();
         } else {
           return res.json().then((data) => {
-            let errorMessage = "Authentication Failed";
-            if (data && data.error && data.error.message) {
-              errorMessage = data.error.message;
-            }
+            let errorMessage = "Authentication failed!";
+            // if (data && data.error && data.error.message) {
+            //   errorMessage = data.error.message;
+            // }
+
             throw new Error(errorMessage);
           });
         }
       })
       .then((data) => {
-        authCtx.login(data.idToken);
+        const expirationTime = new Date(
+          new Date().getTime() + +data.expiresIn * 1000
+        );
+        authCtx.login(data.idToken, expirationTime.toISOString());
+        history.replace("/");
       })
       .catch((err) => {
         alert(err.message);
@@ -87,7 +94,7 @@ const AuthForm = () => {
           {!isLoading && (
             <button>{isLogin ? "Login" : "Create Account"}</button>
           )}
-          {isLoading && <p>Sending Request...</p>}
+          {isLoading && <p>Sending request...</p>}
           <button
             type="button"
             className={classes.toggle}
