@@ -21,7 +21,7 @@
 .ModalClosed {
   /* display: none; */
   opacity: 0;
-  animation: closeModal 400ms ease-out forwards;
+  animation: closeModal 1000ms ease-out forwards;
 }
 
 @keyframes openModal {
